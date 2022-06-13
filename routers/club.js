@@ -16,4 +16,8 @@ const router = new Router();
 
 //POST new club
 
+//DELETE club
+router.delete("/club/:id");
+//DELETE user from club
+
 module.exports = router;

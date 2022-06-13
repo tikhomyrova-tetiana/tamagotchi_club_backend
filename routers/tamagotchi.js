@@ -17,3 +17,5 @@ const router = new Router();
 //PATCH tamagotchi info
 
 //DELETE tamagotchi
+
+module.exports = router;

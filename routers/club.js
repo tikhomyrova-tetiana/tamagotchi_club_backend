@@ -15,3 +15,5 @@ const router = new Router();
 //PATCH edit club info
 
 //POST new club
+
+module.exports = router;

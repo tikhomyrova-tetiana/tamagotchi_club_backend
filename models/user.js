@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       user.belongsToMany(models.club, {
-        through: "userclubs",
+        through: "userClubs",
         foreignKey: "userId",
       });
       user.hasMany(models.tamagotchi, { foreignKey: "userId" });

@@ -4,7 +4,7 @@
   "description": "Simple express server with sequelize, pg and jwts",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "nodemon index.js",
     "dev": "env DELAY=1000 npx nodemon .",
     "initdev": "npm run migrate && npm run seed",
     "migrate": "npx sequelize-cli db:migrate",
@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "axios": "^0.19.2",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.16"
   }
 }

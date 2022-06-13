@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       tamagotchi.belongsTo(models.user, { foreignKey: "userId" });
-      tamagotchi.hasOne(models.evolution, { foreignKey: "evolutionId" });
+      tamagotchi.belongsTo(models.evolution, { foreignKey: "evolutionId" });
     }
   }
   tamagotchi.init(

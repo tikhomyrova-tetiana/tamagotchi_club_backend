@@ -14,11 +14,26 @@ router.get("/", async (req, res, next) => {
     res.send(
       await Tamagotchi.findAll({
         include: [{ model: User }],
+        where: Tamagotchi.userId === User.id,
       })
     );
   } catch (e) {
     console.log(e);
     next(e);
+  }
+});
+
+//GET all tamagotchis from user
+router.get("/mine", auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const mine = await Tamagotchi.findAll({
+      include: [{ model: User }],
+      where: { userId: userId },
+    });
+    res.send(mine);
+  } catch (e) {
+    console.log(e.message);
   }
 });
 

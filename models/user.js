@@ -9,7 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      user.belongsToMany(models.club, {
+        through: "userClubs",
+        foreignKey: "userId",
+      });
+      user.hasMany(models.tamagotchi, { foreignKey: "userId" });
     }
   }
   user.init(
@@ -26,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      photoUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "https://tamagotchi.com/wp-content/uploads/mametchi.jpg",
       },
     },
     {

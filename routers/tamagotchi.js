@@ -28,7 +28,6 @@ router.get("/mine", auth, async (req, res) => {
   try {
     const userId = req.user.id;
     const mine = await Tamagotchi.findAll({
-      include: [{ model: User }],
       where: { userId: userId },
     });
     res.send(mine);

@@ -22,6 +22,20 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+//GET all clubs from user
+router.get("/mine", auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const club = await Club.findAll();
+    const mine = await UserClub.findAll({
+      where: [{ userId: userId }, { clubId: club.id }],
+    });
+    res.send(mine);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
 //GET one specific club including user model
 router.get("/:id", async (req, res, next) => {
   try {

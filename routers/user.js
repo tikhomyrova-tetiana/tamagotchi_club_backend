@@ -9,3 +9,5 @@ const UserClub = require("../models/").userClub;
 const router = new Router();
 
 //GET all users
+
+module.exports = router;

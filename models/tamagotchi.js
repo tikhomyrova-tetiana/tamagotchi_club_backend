@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       tamagotchi.belongsTo(models.user, { foreignKey: "userId" });
-      tamagotchi.hasOne(models.evolution, { foreignKey: "tamagotchiId" });
+      tamagotchi.hasOne(models.evolution, { foreignKey: "evolutionId" });
     }
   }
   tamagotchi.init(
@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
           "https://www.bandai.com/wp-content/uploads/tamagotchi-pix-logo-500x500.jpg",
       },
       userId: DataTypes.INTEGER,
+      evolutionId: DataTypes.INTEGER,
     },
     {
       sequelize,

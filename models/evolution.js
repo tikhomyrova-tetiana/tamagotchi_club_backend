@@ -9,18 +9,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       evolution.belongsToMany(models.tamagotchi, {
-        foreignKey: "tamagotchiId",
+        foreignKey: "evolutionId",
       });
     }
   }
   evolution.init(
     {
-      version: DataTypes.STRING,
+      version: {
+        type: DataTypes.STRING,
+        defaultValue: "The Original",
+      },
       generation: DataTypes.INTEGER,
       level: DataTypes.STRING,
       description: DataTypes.STRING,
       imageUrl: DataTypes.STRING,
-      tamagotchiId: DataTypes.INTEGER,
     },
     {
       sequelize,

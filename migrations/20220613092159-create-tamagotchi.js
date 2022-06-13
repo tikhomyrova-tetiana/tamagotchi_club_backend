@@ -36,6 +36,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      evolutionId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "evolutions",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

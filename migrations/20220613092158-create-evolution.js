@@ -23,15 +23,6 @@ module.exports = {
       imageUrl: {
         type: Sequelize.STRING,
       },
-      tamagotchiId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "tamagotchis",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

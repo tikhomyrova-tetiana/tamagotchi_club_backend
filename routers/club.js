@@ -58,7 +58,24 @@ router.get("/:id", async (req, res, next) => {
 //POST new club
 
 //DELETE club
-router.delete("/club/:id");
+router.delete("/:id", auth, async (req, res, next) => {
+  const userId = req.user.id;
+  const { id } = req.params;
+  try {
+    const clubToDelete = await Club.findByPk(id);
+    if (!clubToDelete) {
+      res.status(404).send(`No clubs with that id ${id}`);
+      return;
+    } else if (clubToDelete.ownerId !== userId) {
+      res.status(404).send(`You are not the owner of this club to delete it`);
+      return;
+    }
+    const deletedClub = clubToDelete.destroy({ where: { id: id } });
+    res.send({ club: deletedClub, message: "club removed" });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 //DELETE user from club
 
 module.exports = router;

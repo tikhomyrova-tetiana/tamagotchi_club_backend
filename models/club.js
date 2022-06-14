@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         through: "userClubs",
         foreignKey: "clubId",
       });
+      club.belongsTo(models.user, { foreignKey: "ownerId" });
     }
   }
   club.init(
@@ -19,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       description: DataTypes.STRING,
       pictureUrl: DataTypes.STRING,
+      backgroundcolor: DataTypes.STRING,
+      textcolor: DataTypes.STRING,
+      private: DataTypes.BOOLEAN,
     },
     {
       sequelize,

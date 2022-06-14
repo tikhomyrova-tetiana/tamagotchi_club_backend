@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
       user.hasMany(models.tamagotchi, { foreignKey: "userId" });
+      user.hasMany(models.club, { foreignKey: "ownerId" });
     }
   }
   user.init(

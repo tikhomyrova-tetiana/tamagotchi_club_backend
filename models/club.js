@@ -8,10 +8,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      club.belongsTo(models.user, {
+      club.belongsToMany(models.user, {
         through: "userClubs",
         foreignKey: "clubId",
       });
+      club.belongsTo(models.user, { foreignKey: "ownerId" });
     }
   }
   club.init(
@@ -19,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       description: DataTypes.STRING,
       pictureUrl: DataTypes.STRING,
+      backgroundcolor: DataTypes.STRING,
+      textcolor: DataTypes.STRING,
+      private: DataTypes.BOOLEAN,
     },
     {
       sequelize,

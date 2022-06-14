@@ -22,15 +22,28 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-//GET all clubs from user
+//GET all clubs user is member from
 router.get("/mine", auth, async (req, res) => {
   try {
     const userId = req.user.id;
-    const club = await Club.findAll();
-    const mine = await UserClub.findAll({
-      where: [{ userId: userId }, { clubId: club.id }],
+    const member = await UserClub.findAll({
+      include: { model: Club },
+      where: [{ userId: userId }],
     });
-    res.send(mine);
+    res.send(member);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+//GET all clubs user is the owner from
+router.get("/owner", auth, async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    const ownedbyuser = await Club.findAll({
+      where: { ownerId: ownerId },
+    });
+    res.send(ownedbyuser);
   } catch (e) {
     console.log(e.message);
   }

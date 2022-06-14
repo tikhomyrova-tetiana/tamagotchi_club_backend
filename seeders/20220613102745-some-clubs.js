@@ -10,6 +10,10 @@ module.exports = {
           description: "Best club ever!",
           pictureUrl:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSahfTo9tMzej7PJ3lDWSRpY6qQK_aeyhdGz6clRpnxEe8W4o1oLjzSb5M5eGyw-1Si3gI&usqp=CAU",
+          backgroundcolor: "#90caf9",
+          textcolor: "#ad1457",
+          private: false,
+          ownerId: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

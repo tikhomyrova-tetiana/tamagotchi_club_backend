@@ -57,4 +57,8 @@ router.get("/:id", async (req, res, next) => {
 
 //POST new club
 
+//DELETE club
+router.delete("/club/:id");
+//DELETE user from club
+
 module.exports = router;

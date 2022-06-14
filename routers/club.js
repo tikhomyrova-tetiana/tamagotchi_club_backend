@@ -36,6 +36,19 @@ router.get("/mine", auth, async (req, res) => {
   }
 });
 
+//GET all clubs user is the owner from
+router.get("/owner", auth, async (req, res) => {
+  try {
+    const ownerId = req.user.id;
+    const ownedbyuser = await Club.findAll({
+      where: { ownerId: ownerId },
+    });
+    res.send(ownedbyuser);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
 //GET one specific club including user model
 router.get("/:id", async (req, res, next) => {
   try {

@@ -58,7 +58,51 @@ router.get("/:id", async (req, res, next) => {
 //POST new club
 
 //DELETE club
-router.delete("/club/:id");
+router.delete("/:id", auth, async (req, res, next) => {
+  const userId = req.user.id;
+  const { id } = req.params;
+  try {
+    const clubToDelete = await Club.findByPk(id);
+    if (!clubToDelete) {
+      res.status(404).send(`No clubs with that id ${id}`);
+      return;
+    } else if (clubToDelete.ownerId !== userId) {
+      res.status(404).send(`You are not the owner of this club to delete it`);
+      return;
+    }
+    const deletedClub = clubToDelete.destroy({ where: { id: id } });
+    res.send({ club: deletedClub, message: "club removed" });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 //DELETE user from club
+router.delete("/members/:id/", auth, async (req, res, next) => {
+  const ownerId = req.user.id;
+  const { memberId } = req.body;
+  const { id } = req.params;
+  try {
+    const club = await Club.findByPk(id);
+    if (!club) {
+      res.status(404).send(`No clubs with that id ${id}`);
+      return;
+    } else if (club.ownerId !== ownerId) {
+      res
+        .status(404)
+        .send(`You are not the owner of this club to delete a member`);
+      return;
+    }
+    const memberToDelete = await UserClub.findOne({
+      where: { userId: memberId, clubId: club.id },
+    });
+    const memberDeleted = memberToDelete.destroy({
+      where: { userId: memberId },
+    });
+    res.send({ member: memberDeleted, message: "member removed" });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 module.exports = router;

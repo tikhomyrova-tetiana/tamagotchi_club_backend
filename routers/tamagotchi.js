@@ -8,13 +8,22 @@ const Tamagotchi = require("../models/").tamagotchi;
 const UserClub = require("../models/").userClub;
 const router = new Router();
 
+//GET evolutions
+router.get("/evolution", async (req, res, next) => {
+  try {
+    const evolutions = await Evolution.findAll();
+    res.send(evolutions);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 //GET all tamagotchis including user model
 router.get("/", async (req, res, next) => {
   try {
     res.send(
       await Tamagotchi.findAll({
         include: [{ model: User }],
-        where: Tamagotchi.userId === User.id,
       })
     );
   } catch (e) {
@@ -29,6 +38,7 @@ router.get("/mine", auth, async (req, res) => {
     const userId = req.user.id;
     const mine = await Tamagotchi.findAll({
       where: { userId: userId },
+      include: [{ model: Evolution }],
     });
     res.send(mine);
   } catch (e) {

@@ -64,8 +64,48 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //POST new tamagotchi
+router.post("/", auth, async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { name, age, deaths, version, generation, imageUrl, evolutionId } =
+      req.body;
+    const userId = req.user.id;
 
+    const newTamaForm = await Tamagotchi.create({
+      name: name,
+      age: age,
+      deaths: deaths,
+      version: version,
+      generation: generation,
+      imageUrl: imageUrl,
+      userId: userId,
+      evolutionId: evolutionId,
+    });
+    res.status(201).send(newTamaForm);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 //PATCH tamagotchi info
+router.patch("/editTamaForm", auth, async (req, res) => {
+  const { name, age, deaths, version, generation, evolutionId } = req.body;
+  try {
+    const updatedTama = await Tamagotchi.update({
+      name,
+      age: parseInt(age),
+      deaths,
+      version,
+      generation,
+      imageUrl,
+      evolutionId: parseInt(evolutionId),
+    });
+    res.status(200).send({ message: "Profile updated successfully" });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).send("invalid ID");
+  }
+});
 
 //DELETE tamagotchi
 // http POST :4000/auth/login email=... password=... --> token

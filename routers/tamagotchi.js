@@ -54,29 +54,31 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //POST new tamagotchi
-router.post("/submitTamaForm", auth, async (request, response, next) => {
+router.post("/", auth, async (req, res, next) => {
   try {
-    console.log(request.body);
-    const { name, age, deaths, version, generation, evolutionId } =
-      request.body;
+    console.log(req.body);
+    const { name, age, deaths, version, generation, imageUrl, evolutionId } =
+      req.body;
+    const userId = req.user.id;
 
-    const newForm = await Tamagotchi.create({
+    const newTamaForm = await Tamagotchi.create({
       name: name,
       age: age,
       deaths: deaths,
       version: version,
       generation: generation,
       imageUrl: imageUrl,
+      userId: userId,
       evolutionId: evolutionId,
     });
-    response.status(201).send(newForm);
+    res.status(201).send(newTamaForm);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
 //PATCH tamagotchi info
-router.patch("/edit", auth, async (req, res) => {
+router.patch("/editTamaForm", auth, async (req, res) => {
   const { name, age, deaths, version, generation, evolutionId } = req.body;
   try {
     const updatedTama = await Tamagotchi.update({

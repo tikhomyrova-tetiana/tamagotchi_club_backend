@@ -24,7 +24,6 @@ router.get("/", async (req, res, next) => {
     res.send(
       await Tamagotchi.findAll({
         include: [{ model: User }],
-        where: Tamagotchi.userId === User.id,
       })
     );
   } catch (e) {

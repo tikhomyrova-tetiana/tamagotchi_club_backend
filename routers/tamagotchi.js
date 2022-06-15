@@ -95,10 +95,21 @@ router.post("/", auth, async (req, res, next) => {
 router.patch("/:id", auth, async (req, res) => {
   const { name, age, deaths, version, generation, imageUrl, evolutionId } =
     req.body;
+  const userId = req.user.id;
   const { id } = req.params;
   try {
-    const updatedTama = await Tamagotchi.findByPk(id);
-    updatedTama.update({
+    const tamaToUpdate = await Tamagotchi.findByPk(id);
+    if (!tamaToUpdate) {
+      res.status(404).send(`No tamagochis with that id ${id}`);
+      return;
+    } else if (tamaToUpdate.userId !== userId) {
+      res
+        .status(404)
+        .send(`You are not the owner of this tamagotchi to edit it`);
+      return;
+    }
+
+    const updatedTama = await tamaToUpdate.update({
       name,
       age: parseInt(age),
       deaths,
@@ -107,6 +118,12 @@ router.patch("/:id", auth, async (req, res) => {
       imageUrl,
       evolutionId: parseInt(evolutionId),
     });
+
+    if (!updatedTama) {
+      res.status(404).send(`Update failed.`);
+      return;
+    }
+
     console.log("UPDATED: ", updatedTama);
     res.status(200).send(updatedTama[1]);
   } catch (error) {

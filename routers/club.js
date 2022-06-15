@@ -8,7 +8,7 @@ const Tamagotchi = require("../models/").tamagotchi;
 const UserClub = require("../models/").userClub;
 const router = new Router();
 
-//GET all clubs including user and tamagotchi model
+//GET all clubs including user model
 router.get("/", async (req, res, next) => {
   try {
     res.send(

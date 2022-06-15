@@ -89,18 +89,26 @@ router.post("/", auth, async (req, res, next) => {
 });
 //PATCH tamagotchi info
 router.patch("/editTamaForm", auth, async (req, res) => {
-  const { name, age, deaths, version, generation, evolutionId } = req.body;
+  const { id, name, age, deaths, version, generation, imageUrl, evolutionId } =
+    req.body;
   try {
-    const updatedTama = await Tamagotchi.update({
-      name,
-      age: parseInt(age),
-      deaths,
-      version,
-      generation,
-      imageUrl,
-      evolutionId: parseInt(evolutionId),
-    });
-    res.status(200).send({ message: "Profile updated successfully" });
+    const updatedTama = await Tamagotchi.update(
+      {
+        name,
+        age: parseInt(age),
+        deaths,
+        version,
+        generation,
+        imageUrl,
+        evolutionId: parseInt(evolutionId),
+      },
+      {
+        where: { id: id },
+        returning: true,
+      }
+    );
+    console.log("UPDATED: ", updatedTama);
+    res.status(200).send(updatedTama[1]);
   } catch (error) {
     console.log(error.message);
     return res.status(400).send("invalid ID");

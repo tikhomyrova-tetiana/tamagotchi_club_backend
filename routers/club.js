@@ -67,8 +67,77 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //PATCH edit club info
+router.patch("/:id", auth, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const {
+      name,
+      description,
+      pictureUrl,
+      backgroundcolor,
+      textcolor,
+      private,
+    } = req.body;
+    const club = await Club.findByPk(id);
+    if (!club) {
+      res.status(404).send(`No clubs with that id ${id}`);
+      return;
+    } else if (club.ownerId !== userId) {
+      res.status(404).send(`You are not the owner of this club to edit it`);
+      return;
+    }
+    const updatedClub = await club.update({
+      name: name,
+      description: description,
+      pictureUrl: pictureUrl,
+      backgroundcolor: backgroundcolor,
+      textcolor: textcolor,
+      private: private,
+    });
+
+    res.send(updatedClub);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 //POST new club
+router.post("/", auth, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const {
+      name,
+      description,
+      pictureUrl,
+      backgroundcolor,
+      textcolor,
+      private,
+    } = req.body;
+
+    const club = await Club.findOne({ where: { name: name } });
+    if (club) {
+      res.status(400).send("Club with this name already exist");
+      return;
+    }
+    const newClub = await Club.create({
+      name: name,
+      description: description,
+      pictureUrl: pictureUrl,
+      backgroundcolor: backgroundcolor,
+      textcolor: textcolor,
+      private: private,
+      ownerId: userId,
+    });
+    const newUserClub = await UserClub.create({
+      userId: userId,
+      clubId: newClub.id,
+    });
+    res.send(newUserClub);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
 
 //DELETE club
 router.delete("/:id", auth, async (req, res, next) => {

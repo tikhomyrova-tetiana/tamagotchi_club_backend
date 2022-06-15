@@ -49,6 +49,16 @@ router.get("/owner", auth, async (req, res) => {
   }
 });
 
+//GET all public clubs
+router.get("/public", async (req, res) => {
+  try {
+    const publicClubs = await Club.findAll({ where: { private: false } });
+    res.send(publicClubs);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
 //GET one specific club including user model
 router.get("/:id", async (req, res, next) => {
   try {

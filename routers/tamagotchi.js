@@ -66,7 +66,6 @@ router.get("/:id", async (req, res, next) => {
 //POST new tamagotchi
 router.post("/", auth, async (req, res, next) => {
   try {
-    console.log(req.body);
     const { name, age, deaths, version, generation, imageUrl, evolutionId } =
       req.body;
     const userId = req.user.id;
@@ -81,32 +80,33 @@ router.post("/", auth, async (req, res, next) => {
       userId: userId,
       evolutionId: evolutionId,
     });
-    res.status(201).send(newTamaForm);
+
+    const newTama = await Tamagotchi.findByPk(newTamaForm.id, {
+      include: [{ model: Evolution }],
+    });
+
+    res.status(201).send(newTama);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
 //PATCH tamagotchi info
-router.patch("/editTamaForm", auth, async (req, res) => {
-  const { id, name, age, deaths, version, generation, imageUrl, evolutionId } =
+router.patch("/:id", auth, async (req, res) => {
+  const { name, age, deaths, version, generation, imageUrl, evolutionId } =
     req.body;
+  const { id } = req.params;
   try {
-    const updatedTama = await Tamagotchi.update(
-      {
-        name,
-        age: parseInt(age),
-        deaths,
-        version,
-        generation,
-        imageUrl,
-        evolutionId: parseInt(evolutionId),
-      },
-      {
-        where: { id: id },
-        returning: true,
-      }
-    );
+    const updatedTama = await Tamagotchi.findByPk(id);
+    updatedTama.update({
+      name,
+      age: parseInt(age),
+      deaths,
+      version,
+      generation,
+      imageUrl,
+      evolutionId: parseInt(evolutionId),
+    });
     console.log("UPDATED: ", updatedTama);
     res.status(200).send(updatedTama[1]);
   } catch (error) {

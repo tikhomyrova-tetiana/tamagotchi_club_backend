@@ -39,4 +39,35 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// PATCH user information
+
+router.patch("/:id", auth, async (req, res) => {
+  const { name, email, photoUrl } = req.body;
+  const userId = req.user.id;
+  try {
+    const userToUpdate = await User.findByPk(userId);
+    if (!userToUpdate) {
+      res.status(404).send(`No user with that id ${userId}`);
+      return;
+    }
+
+    const updatedUser = await userToUpdate.update({
+      name,
+      email,
+      photoUrl,
+    });
+
+    if (!updatedUser) {
+      res.status(404).send(`Update failed.`);
+      return;
+    }
+
+    const userNewData = updatedUser.dataValues;
+    res.status(200).send(userNewData);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(400).send(error.message);
+  }
+});
+
 module.exports = router;

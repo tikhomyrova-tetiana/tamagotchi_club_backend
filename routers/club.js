@@ -11,11 +11,12 @@ const router = new Router();
 //GET all clubs including user model
 router.get("/", async (req, res, next) => {
   try {
-    res.send(
-      await Club.findAll({
-        include: [{ model: User }],
-      })
-    );
+    const clubs = await Club.findAll({
+      include: [{ model: User }],
+    });
+
+    console.log("clubs", clubs);
+    res.send(clubs);
   } catch (e) {
     console.log(e);
     next(e);
@@ -143,7 +144,11 @@ router.post("/", auth, async (req, res, next) => {
       userId: userId,
       clubId: newClub.id,
     });
-    res.send(newUserClub);
+
+    const clubToSend = await UserClub.findByPk(newUserClub.id, {
+      include: { model: Club },
+    });
+    res.send(clubToSend);
   } catch (error) {
     console.log(error.message);
   }

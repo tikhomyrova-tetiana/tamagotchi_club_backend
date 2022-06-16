@@ -6,6 +6,7 @@ const Club = require("../models/").club;
 const Evolution = require("../models/").evolution;
 const Tamagotchi = require("../models/").tamagotchi;
 const UserClub = require("../models/").userClub;
+const { Op } = require("sequelize");
 const router = new Router();
 
 //GET evolutions
@@ -19,13 +20,21 @@ router.get("/evolution", async (req, res, next) => {
 });
 
 //GET all tamagotchis including user model
-router.get("/", async (req, res, next) => {
+router.get("/group/:userIds", async (req, res, next) => {
   try {
-    res.send(
-      await Tamagotchi.findAll({
-        include: [{ model: User }, { model: Evolution }],
-      })
-    );
+    const userIds = req.params.userIds;
+    const parsedIds = JSON.parse(userIds);
+    console.log(parsedIds);
+    const tamagotchis = await Tamagotchi.findAll({
+      include: [{ model: User }, { model: Evolution }],
+      where: {
+        userId: {
+          [Op.in]: parsedIds,
+        },
+      },
+    });
+
+    res.send(tamagotchis);
   } catch (e) {
     console.log(e);
     next(e);

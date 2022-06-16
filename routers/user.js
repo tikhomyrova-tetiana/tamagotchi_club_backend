@@ -42,7 +42,7 @@ router.get("/:id", async (req, res, next) => {
 // PATCH user information
 
 router.patch("/:id", auth, async (req, res) => {
-  const { name, email, password, photoUrl } = req.body;
+  const { name, email, photoUrl } = req.body;
   const userId = req.user.id;
   try {
     const userToUpdate = await User.findByPk(userId);
@@ -54,7 +54,6 @@ router.patch("/:id", auth, async (req, res) => {
     const updatedUser = await userToUpdate.update({
       name,
       email,
-      password,
       photoUrl,
     });
 
@@ -64,11 +63,10 @@ router.patch("/:id", auth, async (req, res) => {
     }
 
     const userNewData = updatedUser.dataValues;
-    // console.log("UPDATED: ", userNewData);
     res.status(200).send(userNewData);
   } catch (error) {
     console.log(error.message);
-    return res.status(400).send("invalid ID");
+    return res.status(400).send(error.message);
   }
 });
 

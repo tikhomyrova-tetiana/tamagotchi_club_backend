@@ -23,7 +23,7 @@ router.get("/", async (req, res, next) => {
   try {
     res.send(
       await Tamagotchi.findAll({
-        include: [{ model: User }],
+        include: [{ model: User }, { model: Evolution }],
       })
     );
   } catch (e) {
